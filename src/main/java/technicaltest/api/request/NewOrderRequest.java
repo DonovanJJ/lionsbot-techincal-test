@@ -1,5 +1,8 @@
 package technicaltest.api.request;
 
+/**
+ * Represents a post request to create a new order.
+ */
 public class NewOrderRequest {
     private double totalPrice;
     private int noOfItems;

@@ -1,7 +1,7 @@
 package technicaltest.api.Order;
 
 import org.springframework.stereotype.Service;
-import technicaltest.api.OrderRepository;
+import technicaltest.api.repositories.OrderRepository;
 import technicaltest.api.user.UserService;
 import technicaltest.api.exception.OrderNotFoundException;
 

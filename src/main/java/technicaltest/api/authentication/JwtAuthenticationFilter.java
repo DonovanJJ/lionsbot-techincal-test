@@ -1,4 +1,4 @@
-package technicaltest.api.jwt;
+package technicaltest.api.authentication;
 
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -11,15 +11,24 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import technicaltest.api.CustomUserDetailsService;
 
 import java.io.IOException;
 
+/**
+ * Middleware to intercept incoming http request to authenticate the user using JWT tokens.
+ */
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private JwtUtil jwtUtil;
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
+
+    /**
+     * Checks if the incoming http request contains a valid Bearer token containing a valid JWT token.
+     *
+     * Aside from verifying the jwt token, it updates the authentication status of the user based on the
+     * verification outcome
+     */
     @Override
     protected void doFilterInternal(HttpServletRequest request,
                                     HttpServletResponse response,
@@ -36,6 +45,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
     }
 
+    /**
+     * Extracts the JWT token from the http request header.
+     *
+     * @param request incoming http request
+     * @return String JWT token formatted as a string
+     */
     private String getJwtFromRequest(HttpServletRequest request) {
         String bearerToken = request.getHeader(JwtUtil.TOKEN_HEADER);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith(JwtUtil.TOKEN_PREFIX)) {

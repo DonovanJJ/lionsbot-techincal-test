@@ -1,5 +1,8 @@
 package technicaltest.api.request;
 
+/**
+ * Represents a request to create a new user.
+ */
 public class SignUpRequest {
     private String username;
     private String password;

@@ -1,5 +1,8 @@
 package technicaltest.api.request;
 
+/**
+ * This class models the data inside a user login post request.
+ */
 public class LoginRequest {
     private String username;
     private String password;

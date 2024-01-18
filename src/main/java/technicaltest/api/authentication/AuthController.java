@@ -1,8 +1,7 @@
-package technicaltest.api.jwt;
+package technicaltest.api.authentication;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -10,7 +9,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import technicaltest.api.UserRepository;
+import technicaltest.api.repositories.UserRepository;
 import technicaltest.api.user.User;
 import technicaltest.api.exception.UsernameNotFoundException;
 import technicaltest.api.request.LoginRequest;

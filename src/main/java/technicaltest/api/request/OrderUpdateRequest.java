@@ -4,6 +4,9 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Represents a request to update an existing order.
+ */
 public class OrderUpdateRequest {
     private Date orderDate;
     private double totalPrice;

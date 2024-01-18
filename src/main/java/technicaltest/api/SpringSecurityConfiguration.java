@@ -13,8 +13,8 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import technicaltest.api.jwt.JwtAuthenticationFilter;
-import technicaltest.api.role.Role;
+import technicaltest.api.authentication.CustomUserDetailsService;
+import technicaltest.api.authentication.JwtAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity

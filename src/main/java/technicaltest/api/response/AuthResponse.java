@@ -1,5 +1,10 @@
 package technicaltest.api.response;
 
+/**
+ * Represents the response given to the user upon successful login.
+ *
+ * Contains the JWT token used for subsequent authentication
+ */
 public class AuthResponse {
     private String accessToken;
     private String tokenType = "Bearer ";

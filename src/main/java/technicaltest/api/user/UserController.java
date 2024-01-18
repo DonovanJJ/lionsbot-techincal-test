@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import technicaltest.api.RoleRepository;
+import technicaltest.api.repositories.RoleRepository;
 import technicaltest.api.request.PasswordUpdateRequest;
 import technicaltest.api.request.SignUpRequest;
 import technicaltest.api.role.Role;

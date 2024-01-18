@@ -1,4 +1,4 @@
-package technicaltest.api.jwt;
+package technicaltest.api.authentication;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

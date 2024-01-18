@@ -1,5 +1,8 @@
 package technicaltest.api.request;
 
+/**
+ * Represents a request to update an existing user's password.
+ */
 public class PasswordUpdateRequest {
     private String password;
     public PasswordUpdateRequest() {

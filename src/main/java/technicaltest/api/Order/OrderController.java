@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import technicaltest.api.role.Role;
 import technicaltest.api.user.User;
 import technicaltest.api.user.UserService;
-import technicaltest.api.jwt.JwtUtil;
+import technicaltest.api.authentication.JwtUtil;
 import technicaltest.api.request.NewOrderRequest;
 import technicaltest.api.request.OrderUpdateRequest;
 

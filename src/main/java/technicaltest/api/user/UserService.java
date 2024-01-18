@@ -4,7 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import technicaltest.api.UserRepository;
+import technicaltest.api.repositories.UserRepository;
 import technicaltest.api.exception.UserNotFoundException;
 
 import java.util.List;
@@ -40,9 +40,7 @@ public class UserService {
             this.userRepository.save(user);
         } catch (Exception exception) {
             System.out.println(exception);
-            return;
         }
-        System.out.println("Successfully added user!");
     }
 
     @Transactional
@@ -58,7 +56,7 @@ public class UserService {
     public void updateUser(UUID uuid, Map<String, Object> updates) throws UserNotFoundException {
         Optional<User> user = this.userRepository.findByUuid(uuid);
         if (user.isEmpty()) {
-            throw new UserNotFoundException("Customer is not found!");
+            throw new UserNotFoundException("User is not found!");
         }
         User userToUpdate = user.get();
         for (Map.Entry<String, Object> entry: updates.entrySet()) {
