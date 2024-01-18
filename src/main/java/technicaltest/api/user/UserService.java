@@ -27,7 +27,7 @@ public class UserService {
         return this.userRepository.findAll();
     }
 
-    public User findOne(UUID uuid) {
+    public User findOne(UUID uuid) throws UserNotFoundException {
         Optional<User> user = this.userRepository.findByUuid(uuid);
         if (user.isEmpty()) {
             throw new UserNotFoundException("No user of that id: " + uuid + " is found");
@@ -44,7 +44,7 @@ public class UserService {
     }
 
     @Transactional
-    public User deleteOne(UUID uuid) {
+    public User deleteOne(UUID uuid) throws UserNotFoundException {
         Optional<User> userToDelete = this.userRepository.findByUuid(uuid);
         if (userToDelete.isEmpty()) {
             throw new UserNotFoundException("No user of that uuid: " + uuid + " is found");

@@ -1,5 +1,7 @@
 package technicaltest.api.Order;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import technicaltest.api.exception.OrderNotFoundException;
 import technicaltest.api.role.Role;
 import technicaltest.api.user.User;
 import technicaltest.api.user.UserService;
@@ -42,13 +45,10 @@ public class OrderController {
     public List<Order> retrieveOrdersForCustomer(@PathVariable UUID customer_id) {
         return this.orderService.findOrdersForCustomer(customer_id);
     }
-    @GetMapping("/login/orders")
-    public List<Order> retrieveOrder() {
-        return this.orderService.findAllOrders();
-    }
 
     @PostMapping("/orders")
-    public void createOrder(@RequestHeader(name="Authorization") String bearerToken, @RequestBody NewOrderRequest request) {
+    public void createOrder(@RequestHeader(name="Authorization") String bearerToken,
+                            @RequestBody NewOrderRequest request) {
         String token = bearerToken.substring(7, bearerToken.length());
         UUID uuid = this.jwtUtil.getUuidFromJwt(token);
         User user = this.userService.findOne(uuid);
@@ -62,13 +62,16 @@ public class OrderController {
 
     @PutMapping("/orders/{order_id}")
     @PreAuthorize("hasAnyRole('" + Role.ADMIN + "', '" + Role.CUSTOMER + "')")
-    public void updateOrder(@PathVariable UUID order_id, @RequestBody OrderUpdateRequest request) {
-        this.orderService.updateOrder(order_id, request.toMap());
+    public ResponseEntity<String> updateOrder(@PathVariable UUID order_id,
+                                              @RequestBody OrderUpdateRequest request) {
+            this.orderService.updateOrder(order_id, request.toMap());
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated order");
     }
 
     @DeleteMapping("/orders/{order_id}")
     @PreAuthorize("hasRole('" + Role.ADMIN + "')")
-    public Order deleteOrder(@PathVariable UUID order_id) {
-        return this.orderService.deleteOne(order_id);
+    public ResponseEntity<Order> deleteOrder(@PathVariable UUID order_id) {
+            Order orderDeleted = this.orderService.deleteOne(order_id);
+            return ResponseEntity.status(HttpStatus.OK).body(orderDeleted);
     }
 }

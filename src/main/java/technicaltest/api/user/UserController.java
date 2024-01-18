@@ -1,42 +1,45 @@
 package technicaltest.api.user;
 
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import technicaltest.api.repositories.RoleRepository;
+import technicaltest.api.exception.UserNotFoundException;
 import technicaltest.api.request.PasswordUpdateRequest;
 import technicaltest.api.request.SignUpRequest;
 import technicaltest.api.role.Role;
+import technicaltest.api.role.RoleService;
 
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
 @RestController
 public class UserController {
     private final UserService userService;
-    private final RoleRepository roleRepository;
+    private RoleService roleService;
     private PasswordEncoder encoder;
 
     @Autowired
-    public UserController(UserService userService, PasswordEncoder encoder, RoleRepository roleRepository) {
+    public UserController(UserService userService, PasswordEncoder encoder, RoleService roleService) {
         this.userService = userService;
         this.encoder = encoder;
-        this.roleRepository = roleRepository;
+        this.roleService = roleService;
     }
 
-//    @PreAuthorize("hasRole('ROLE_ADMIN')")
     @PreAuthorize("hasRole('" + Role.ADMIN + "')")
     @GetMapping("/customers")
     public List<User> retrieveAllCustomer() {
@@ -44,8 +47,10 @@ public class UserController {
     }
 
     @GetMapping("/customers/{customer_id}")
-    public User retrieveCustomer(@PathVariable UUID customer_id) {
-        return this.userService.findOne(customer_id);
+    public ResponseEntity<User> retrieveCustomer(@PathVariable UUID customer_id) {
+        User user = this.userService.findOne(customer_id);
+        return ResponseEntity.status(HttpStatus.OK)
+                .body(user);
     }
 
     @PostMapping("/customers")
@@ -57,11 +62,8 @@ public class UserController {
                 request.getContact());
         // Create Role for the customer
         Set<Role> roles = new HashSet<>();
-        Optional<Role> role = this.roleRepository.findByName(Role.CUSTOMER);
-        if (role.isEmpty()) {
-            return;
-        }
-        roles.add(role.get());
+        Role role = this.roleService.findOneByName(Role.CUSTOMER);
+        roles.add(role);
         user.setRoles(roles);
         this.userService.createOne(user);
     }
@@ -75,25 +77,24 @@ public class UserController {
                 request.getContact());
         // Create Role for the admin
         Set<Role> roles = new HashSet<>();
-        Optional<Role> role = this.roleRepository.findByName(Role.ADMIN);
-        if (role.isEmpty()) {
-            return;
-        }
-        roles.add(role.get());
+        Role role = this.roleService.findOneByName(Role.ADMIN);
+        roles.add(role);
         user.setRoles(roles);
         this.userService.createOne(user);
     }
 
     @DeleteMapping("/customers/{uuid}")
     @PreAuthorize("hasRole('" + Role.ADMIN + "')")
-    public User deleteCustomer(@PathVariable UUID uuid) {
-        return this.userService.deleteOne(uuid);
+    public ResponseEntity<User> deleteCustomer(@PathVariable UUID uuid) {
+        User userDeleted = this.userService.deleteOne(uuid);
+        return ResponseEntity.status(HttpStatus.OK).body(userDeleted);
     }
 
     @PutMapping("/changepassword/{customer_id}")
-    public void changeCustomerPassword(@PathVariable UUID customer_id, @RequestBody PasswordUpdateRequest request) {
+    public ResponseEntity<String> changeCustomerPassword(@PathVariable UUID customer_id, @RequestBody PasswordUpdateRequest request) {
         Map<String, Object> map = new HashMap<>();
         map.put("password", request.getPassword());
         this.userService.updateUser(customer_id, map);
+        return ResponseEntity.noContent().build();
     }
 }
