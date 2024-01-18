@@ -30,7 +30,6 @@ public class AuthController {
         this.userRepository = userRepository;
     }
 
-    @PreAuthorize("permitAll")
     @PostMapping(value="/auth/login")
     public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest)  {
         Authentication authentication =

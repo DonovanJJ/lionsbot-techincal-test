@@ -1,5 +1,6 @@
 package technicaltest.api.Order;
 
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import technicaltest.api.role.Role;
 import technicaltest.api.user.User;
 import technicaltest.api.user.UserService;
 import technicaltest.api.jwt.JwtUtil;
@@ -30,11 +32,13 @@ public class OrderController {
     }
 
     @GetMapping("/orders")
+    @PreAuthorize("hasRole('" + Role.ADMIN + "')")
     public List<Order> retrieveAllOrders() {
         return this.orderService.findAllOrders();
     }
 
     @GetMapping("/orders/{customer_id}")
+    @PreAuthorize("hasAnyRole('" + Role.ADMIN + "', '" + Role.CUSTOMER + "')")
     public List<Order> retrieveOrdersForCustomer(@PathVariable UUID customer_id) {
         return this.orderService.findOrdersForCustomer(customer_id);
     }
@@ -57,11 +61,13 @@ public class OrderController {
     }
 
     @PutMapping("/orders/{order_id}")
+    @PreAuthorize("hasAnyRole('" + Role.ADMIN + "', '" + Role.CUSTOMER + "')")
     public void updateOrder(@PathVariable UUID order_id, @RequestBody OrderUpdateRequest request) {
         this.orderService.updateOrder(order_id, request.toMap());
     }
 
     @DeleteMapping("/orders/{order_id}")
+    @PreAuthorize("hasRole('" + Role.ADMIN + "')")
     public Order deleteOrder(@PathVariable UUID order_id) {
         return this.orderService.deleteOne(order_id);
     }

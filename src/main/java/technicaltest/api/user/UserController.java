@@ -36,7 +36,8 @@ public class UserController {
         this.roleRepository = roleRepository;
     }
 
-    @PreAuthorize("")
+//    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @PreAuthorize("hasRole('" + Role.ADMIN + "')")
     @GetMapping("/customers")
     public List<User> retrieveAllCustomer() {
         return this.userService.findAll();
@@ -84,6 +85,7 @@ public class UserController {
     }
 
     @DeleteMapping("/customers/{uuid}")
+    @PreAuthorize("hasRole('" + Role.ADMIN + "')")
     public User deleteCustomer(@PathVariable UUID uuid) {
         return this.userService.deleteOne(uuid);
     }
