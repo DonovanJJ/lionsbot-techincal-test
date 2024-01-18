@@ -1,5 +1,6 @@
 package technicaltest.api.Order;
 
+import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import technicaltest.api.exception.OrderNotFoundException;
 import technicaltest.api.role.Role;
 import technicaltest.api.user.User;
@@ -19,6 +21,7 @@ import technicaltest.api.authentication.JwtUtil;
 import technicaltest.api.request.NewOrderRequest;
 import technicaltest.api.request.OrderUpdateRequest;
 
+import java.net.URI;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -47,8 +50,8 @@ public class OrderController {
     }
 
     @PostMapping("/orders")
-    public void createOrder(@RequestHeader(name="Authorization") String bearerToken,
-                            @RequestBody NewOrderRequest request) {
+    public ResponseEntity createOrder(@RequestHeader(name="Authorization") String bearerToken,
+                                @RequestBody NewOrderRequest request) {
         String token = bearerToken.substring(7, bearerToken.length());
         UUID uuid = this.jwtUtil.getUuidFromJwt(token);
         User user = this.userService.findOne(uuid);
@@ -58,6 +61,9 @@ public class OrderController {
                 request.getNoOfItems(),
                 user);
         this.orderService.createOne(order);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{uuid}")
+                .buildAndExpand(order.getUuid()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @PutMapping("/orders/{order_id}")

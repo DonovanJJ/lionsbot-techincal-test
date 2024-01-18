@@ -28,6 +28,7 @@ public class SpringSecurityConfiguration {
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers(HttpMethod.POST, "/auth/login").permitAll()
                 .requestMatchers(HttpMethod.POST, "/customers").permitAll()
+                .requestMatchers(HttpMethod.POST, "/admin").permitAll()
                 .anyRequest().authenticated());
         http.authenticationProvider(authenticationProvider());
         http.sessionManagement(

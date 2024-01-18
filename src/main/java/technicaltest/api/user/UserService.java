@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import technicaltest.api.exception.UsernameNotFoundException;
 import technicaltest.api.repositories.UserRepository;
 import technicaltest.api.exception.UserNotFoundException;
 
@@ -31,6 +32,14 @@ public class UserService {
         Optional<User> user = this.userRepository.findByUuid(uuid);
         if (user.isEmpty()) {
             throw new UserNotFoundException("No user of that id: " + uuid + " is found");
+        }
+        return user.get();
+    }
+
+    public User findOneByUsername(String username) throws UserNotFoundException {
+        Optional<User> user = this.userRepository.findByUsername(username);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("User not found");
         }
         return user.get();
     }

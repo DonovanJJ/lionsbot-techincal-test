@@ -9,24 +9,21 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-import technicaltest.api.repositories.UserRepository;
 import technicaltest.api.user.User;
-import technicaltest.api.exception.UsernameNotFoundException;
 import technicaltest.api.request.LoginRequest;
 import technicaltest.api.response.AuthResponse;
-
-import java.util.Optional;
+import technicaltest.api.user.UserService;
 
 @Controller
 public class AuthController {
     private final AuthenticationManager authenticationManager;
-    private UserRepository userRepository;
+    private UserService userService;
     private JwtUtil jwtUtil;
     public AuthController(AuthenticationManager authenticationManager, JwtUtil jwtUtil,
-                          UserRepository userRepository) {
+                          UserService userService) {
         this.authenticationManager = authenticationManager;
         this.jwtUtil = jwtUtil;
-        this.userRepository = userRepository;
+        this.userService = userService;
     }
 
     @PostMapping(value="/auth/login")
@@ -34,12 +31,9 @@ public class AuthController {
         Authentication authentication =
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), loginRequest.getPassword()));
-        Optional<User> user = this.userRepository.findByUsername(loginRequest.getUsername());
-        if (user.isEmpty()) {
-            throw new UsernameNotFoundException("User not found");
-        }
+        User user = this.userService.findOneByUsername(loginRequest.getUsername());
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = jwtUtil.createToken(authentication, user.get().getUuid());
+        String token = jwtUtil.createToken(authentication, user.getUuid());
         return new ResponseEntity<>(new AuthResponse(token), HttpStatus.OK);
     }
 }

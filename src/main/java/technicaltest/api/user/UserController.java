@@ -7,19 +7,19 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import technicaltest.api.exception.UserNotFoundException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import technicaltest.api.request.PasswordUpdateRequest;
 import technicaltest.api.request.SignUpRequest;
 import technicaltest.api.role.Role;
 import technicaltest.api.role.RoleService;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @PostMapping("/customers")
-    public void createCustomer(@RequestBody SignUpRequest request) {
+    public ResponseEntity<User> createCustomer(@RequestBody SignUpRequest request) {
         User user = new User(UUID.randomUUID(),
                 request.getUsername(),
                 encoder.encode(request.getPassword()),
@@ -66,10 +66,13 @@ public class UserController {
         roles.add(role);
         user.setRoles(roles);
         this.userService.createOne(user);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{uuid}")
+                .buildAndExpand(user.getUuid()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @PostMapping("/admin")
-    public void createAdmin(@RequestBody SignUpRequest request) {
+    public ResponseEntity<User> createAdmin(@RequestBody SignUpRequest request) {
         User user = new User(UUID.randomUUID(),
                 request.getUsername(),
                 encoder.encode(request.getPassword()),
@@ -81,6 +84,9 @@ public class UserController {
         roles.add(role);
         user.setRoles(roles);
         this.userService.createOne(user);
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{uuid}")
+                .buildAndExpand(user.getUuid()).toUri();
+        return ResponseEntity.created(location).build();
     }
 
     @DeleteMapping("/customers/{uuid}")
