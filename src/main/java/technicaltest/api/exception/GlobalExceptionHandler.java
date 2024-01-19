@@ -32,7 +32,14 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(value = MethodArgumentNotValidException.class)
-    public ResponseEntity<String> handleException(MethodArgumentNotValidException methodArgumentNotValidException) {
+    public ResponseEntity<String> handleMethodArgumentNotValidException(MethodArgumentNotValidException
+                                                                                    methodArgumentNotValidException) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(methodArgumentNotValidException.getMessage());
+    }
+
+    @ExceptionHandler(value = UsernameAlreadyExistException.class)
+    public ResponseEntity<String> handleUsernameAlreadyExistException(UsernameAlreadyExistException
+                                                                                  usernameAlreadyExistException) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(usernameAlreadyExistException.getMessage());
     }
 }

@@ -4,6 +4,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import technicaltest.api.exception.UsernameAlreadyExistException;
 import technicaltest.api.exception.UsernameNotFoundException;
 import technicaltest.api.repositories.UserRepository;
 import technicaltest.api.exception.UserNotFoundException;
@@ -45,12 +46,12 @@ public class UserService {
         return user.get();
     }
 
-    public void createOne(User user) {
-        try {
-            this.userRepository.save(user);
-        } catch (Exception exception) {
-            System.out.println(exception);
+    public void createOne(User user) throws UsernameAlreadyExistException {
+        Optional<User> existingUser = this.userRepository.findByUsername(user.getUsername());
+        if (existingUser.isPresent()) {
+            throw new UsernameAlreadyExistException("Username already taken");
         }
+        this.userRepository.save(user);
     }
 
     @Transactional

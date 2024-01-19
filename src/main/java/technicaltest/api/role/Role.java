@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import technicaltest.api.user.User;
 
 import java.util.HashSet;
@@ -21,11 +22,10 @@ public class Role {
     @Column(name = "role_id")
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     private Integer id;
-
-    @Column
+    @Column(unique = true)
     private String name;
-
-    @Column
+    @Size(max=255)
+    @Column(nullable = true)
     private String description;
 
     @ManyToMany(mappedBy = "roles")

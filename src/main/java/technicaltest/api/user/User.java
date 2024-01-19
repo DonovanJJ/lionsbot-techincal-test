@@ -15,6 +15,7 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Size;
 import technicaltest.api.Order.Order;
 import technicaltest.api.address.Address;
@@ -35,7 +36,7 @@ public class User {
     @JsonProperty("user_id")
     private UUID uuid;
     @Size(max = 50)
-    @Column(nullable = false, length = 50)
+    @Column(nullable = false, length = 50, unique = true)
     private String username;
     @Size(max = 255)
     @Column(nullable = false, length = 255)
