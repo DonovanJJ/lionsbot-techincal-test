@@ -1,10 +1,14 @@
 package technicaltest.api.request;
 
+import jakarta.validation.constraints.NotNull;
+
 /**
  * Represents a post request to create a new order.
  */
 public class NewOrderRequest {
+    @NotNull(message = "Total price cannot be null")
     private double totalPrice;
+    @NotNull(message = "Number of items cannot be null")
     private int noOfItems;
     public NewOrderRequest(double totalPrice, int noOfItems) {
         this.totalPrice = totalPrice;

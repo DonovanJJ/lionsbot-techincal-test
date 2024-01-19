@@ -1,6 +1,6 @@
 package technicaltest.api.user;
 
-import org.apache.coyote.Response;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -54,7 +54,7 @@ public class UserController {
     }
 
     @PostMapping("/customers")
-    public ResponseEntity<User> createCustomer(@RequestBody SignUpRequest request) {
+    public ResponseEntity<User> createCustomer(@Valid @RequestBody SignUpRequest request) {
         User user = new User(UUID.randomUUID(),
                 request.getUsername(),
                 encoder.encode(request.getPassword()),
@@ -72,7 +72,7 @@ public class UserController {
     }
 
     @PostMapping("/admin")
-    public ResponseEntity<User> createAdmin(@RequestBody SignUpRequest request) {
+    public ResponseEntity<User> createAdmin(@Valid @RequestBody SignUpRequest request) {
         User user = new User(UUID.randomUUID(),
                 request.getUsername(),
                 encoder.encode(request.getPassword()),
@@ -97,7 +97,8 @@ public class UserController {
     }
 
     @PutMapping("/changepassword/{customer_id}")
-    public ResponseEntity<String> changeCustomerPassword(@PathVariable UUID customer_id, @RequestBody PasswordUpdateRequest request) {
+    public ResponseEntity<String> changeCustomerPassword(@PathVariable UUID customer_id,
+                                                         @Valid @RequestBody PasswordUpdateRequest request) {
         Map<String, Object> map = new HashMap<>();
         map.put("password", request.getPassword());
         this.userService.updateUser(customer_id, map);

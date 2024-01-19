@@ -1,6 +1,6 @@
 package technicaltest.api.Order;
 
-import org.apache.coyote.Response;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-import technicaltest.api.exception.OrderNotFoundException;
 import technicaltest.api.role.Role;
 import technicaltest.api.user.User;
 import technicaltest.api.user.UserService;
@@ -51,7 +50,7 @@ public class OrderController {
 
     @PostMapping("/orders")
     public ResponseEntity createOrder(@RequestHeader(name="Authorization") String bearerToken,
-                                @RequestBody NewOrderRequest request) {
+                                @Valid @RequestBody NewOrderRequest request) {
         String token = bearerToken.substring(7, bearerToken.length());
         UUID uuid = this.jwtUtil.getUuidFromJwt(token);
         User user = this.userService.findOne(uuid);
@@ -69,7 +68,7 @@ public class OrderController {
     @PutMapping("/orders/{order_id}")
     @PreAuthorize("hasAnyRole('" + Role.ADMIN + "', '" + Role.CUSTOMER + "')")
     public ResponseEntity<String> updateOrder(@PathVariable UUID order_id,
-                                              @RequestBody OrderUpdateRequest request) {
+                                              @Valid @RequestBody OrderUpdateRequest request) {
             this.orderService.updateOrder(order_id, request.toMap());
             return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Successfully updated order");
     }

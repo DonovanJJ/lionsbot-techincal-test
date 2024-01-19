@@ -1,5 +1,7 @@
 package technicaltest.api.request;
 
+import jakarta.validation.constraints.NotNull;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -9,7 +11,9 @@ import java.util.Map;
  */
 public class OrderUpdateRequest {
     private Date orderDate;
+    @NotNull(message = "Total price cannot be null")
     private double totalPrice;
+    @NotNull(message = "Number of items cannot be null")
     private int noOfItems;
     public OrderUpdateRequest(Date orderDate, double totalPrice, int noOfItems) {
         this.orderDate = orderDate;

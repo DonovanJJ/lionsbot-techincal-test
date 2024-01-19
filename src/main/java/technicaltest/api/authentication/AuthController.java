@@ -1,5 +1,6 @@
 package technicaltest.api.authentication;
 
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -27,7 +28,7 @@ public class AuthController {
     }
 
     @PostMapping(value="/auth/login")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest loginRequest)  {
+    public ResponseEntity<AuthResponse> login(@Valid @RequestBody LoginRequest loginRequest)  {
         Authentication authentication =
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                 loginRequest.getUsername(), loginRequest.getPassword()));
