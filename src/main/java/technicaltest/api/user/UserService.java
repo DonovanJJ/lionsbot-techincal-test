@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import technicaltest.api.exception.UsernameNotFoundException;
 import technicaltest.api.repositories.UserRepository;
 import technicaltest.api.exception.UserNotFoundException;
+import technicaltest.api.role.Role;
 
 import java.util.List;
 import java.util.Map;
@@ -24,8 +25,8 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public List<User> findAll() {
-        return this.userRepository.findAll();
+    public List<User> findAllCustomers() {
+        return this.userRepository.findUsersByRoleName(Role.CUSTOMER);
     }
 
     public User findOne(UUID uuid) throws UserNotFoundException {

@@ -22,11 +22,10 @@ import java.util.stream.Collectors;
 public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret_key;
-    private final long accessTokenValidity = 60*60*1000;
-
     public static final String TOKEN_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
-    private static final int TOKEN_DURATION = 10000000;
+    @Value("${jwt.tokenDuration}")
+    private static int TOKEN_DURATION;
 
     public JwtUtil() {
 

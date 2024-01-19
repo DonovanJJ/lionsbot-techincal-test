@@ -43,7 +43,7 @@ public class UserController {
     @PreAuthorize("hasRole('" + Role.ADMIN + "')")
     @GetMapping("/customers")
     public List<User> retrieveAllCustomer() {
-        return this.userService.findAll();
+        return this.userService.findAllCustomers();
     }
 
     @GetMapping("/customers/{customer_id}")
